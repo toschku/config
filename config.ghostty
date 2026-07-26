@@ -1,0 +1,33 @@
+language = de
+
+font-family = IBM Plex Mono
+
+font-size = 14
+
+theme = light:Catppuccin Latte,dark:Catppuccin Mocha
+
+mouse-hide-while-typing
+
+background-opacity = 0.2
+background-blur = macos-glass-clear
+
+unfocused-split-opacity = 0.5
+
+window-padding-x = 28
+window-padding-y = 28
+
+split-inherit-working-directory = true
+
+macos-titlebar-style = hidden
+# oder window-decoration = none
+
+window-height = 24
+window-width = 80
+
+window-step-resize = true
+
+clipboard-paste-protection = true
+
+macos-option-as-alt = left
+
+macos-icon = glass
