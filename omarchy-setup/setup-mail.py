@@ -3,6 +3,14 @@
 import json
 import os
 from pathlib import Path
+import configparser
+import datetime
+import io
+import shutil
+import subprocess
+
+if subprocess.run(['pgrep', '-x', 'thunderbird'], stdout=subprocess.DEVNULL).returncode == 0:
+    raise SystemExit('Thunderbird vor Änderungen an der Profilzuordnung schließen.')
 
 profile = Path.home() / '.thunderbird' / 'omarchy-icloud'
 profile.mkdir(parents=True, exist_ok=True, mode=0o700)
@@ -46,6 +54,57 @@ if not target.exists():
     print(f'iCloud-Konto vorbereitet: {profile}')
 else:
     print(f'Vorhandenes Profil bleibt erhalten: {profile}')
+
+# Register the same profile for normal Thunderbird starts, not only our launcher.
+def read_ini(path):
+    config = configparser.ConfigParser(interpolation=None)
+    config.optionxform = str
+    if path.exists():
+        config.read(path)
+    return config
+
+def save_ini(path, config):
+    buffer = io.StringIO()
+    config.write(buffer, space_around_delimiters=False)
+    new = buffer.getvalue()
+    if path.exists() and path.read_text() == new:
+        return
+    if path.exists():
+        stamp = datetime.datetime.now(datetime.timezone.utc).strftime('%Y%m%dT%H%M%S%fZ')
+        shutil.copy2(path, path.with_name(path.name + '.bak.' + stamp))
+    path.write_text(new)
+
+registry = profile.parent / 'profiles.ini'
+config = read_ini(registry)
+section = None
+for name in config.sections():
+    if name.startswith('Profile'):
+        config.remove_option(name, 'Default')
+        entry = Path(config[name].get('Path', ''))
+        if config[name].get('IsRelative', '1') == '1':
+            entry = profile.parent / entry
+        if entry.resolve() == profile.resolve():
+            section = name
+    elif name.startswith('Install'):
+        config[name]['Default'] = profile.name
+if section is None:
+    index = 0
+    while f'Profile{index}' in config:
+        index += 1
+    section = f'Profile{index}'
+    config[section] = {'Name': 'omarchy-icloud', 'IsRelative': '1', 'Path': profile.name}
+config[section]['Default'] = '1'
+if 'General' not in config:
+    config['General'] = {}
+config['General'].update({'StartWithLastProfile': '1', 'Version': '2'})
+save_ini(registry, config)
+installs = profile.parent / 'installs.ini'
+if installs.exists():
+    config = read_ini(installs)
+    for section in config.sections():
+        config[section]['Default'] = profile.name
+    save_ini(installs, config)
+print('Thunderbird-Standardprofil: omarchy-icloud')
 
 apps = Path(os.environ.get('XDG_DATA_HOME', str(Path.home() / '.local/share'))) / 'applications'
 apps.mkdir(parents=True, exist_ok=True)

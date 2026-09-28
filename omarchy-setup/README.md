@@ -18,6 +18,12 @@ INTERNAL_KEYBOARD=anderer-geraetename bash setup.sh
 
 ## Konfigurationsprotokoll
 
+### 2026-09-28 – Thunderbird öffnete ein leeres Profil
+
+- Ursache: Das eingerichtete iCloud-Profil wurde nur vom Starter „iCloud Mail“ explizit gewählt. Beim normalen Thunderbird-Start entstand ein separates, leeres Standardprofil; das iCloud-Konto war weiterhin in `omarchy-icloud/prefs.js` vorhanden.
+- Reparatur: `omarchy-icloud` in `profiles.ini` registriert und als Standard gesetzt; vorhandene Installationszuordnungen in `profiles.ini` und `installs.ini` ebenfalls darauf umgestellt. Vorherige INI-Dateien werden mit Zeitstempel gesichert, andere Profile bleiben erhalten.
+- `setup-mail.py` führt diese Zuordnung nun auch bei späteren Installationen aus. Thunderbird muss dabei geschlossen sein. Bestehende Kontoeinstellungen und gespeicherte Zugangsdaten werden nicht verändert oder ins Repository übernommen.
+
 ### 2026-09-28 – Bildschirmschoner auf eine Minute verkürzt
 
 - Aktueller Sollwert: `idle.screensaver = 60` (1 Minute); automatische Sperre weiterhin `idle.lock = 28800` (8 Stunden), jeweils ab Beginn der Inaktivität.
