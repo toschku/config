@@ -71,8 +71,8 @@ target = root / 'omarchy' / 'shell.json'
 old = target.read_text() if target.exists() else '{}'
 config = json.loads(old)
 idle = config.setdefault('idle', {})
-if idle.get('screensaver') != 600 or idle.get('lock') != 28800:
-    idle.update(screensaver=600, lock=28800)
+if idle.get('screensaver') != 60 or idle.get('lock') != 28800:
+    idle.update(screensaver=60, lock=28800)
     new = json.dumps(config, ensure_ascii=False, indent=2) + '\n'
     target.parent.mkdir(parents=True, exist_ok=True)
     if target.exists():
@@ -84,7 +84,7 @@ if idle.get('screensaver') != 600 or idle.get('lock') != 28800:
     print(f'Konfiguriert: {target}')
 else:
     print('Inaktivitätszeiten bereits konfiguriert.')
-print('Bildschirmschoner: 10 Minuten; automatische Sperre: 8 Stunden Inaktivität.')
+print('Bildschirmschoner: 1 Minute; automatische Sperre: 8 Stunden Inaktivität.')
 PY
 
 if [[ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]] && command -v hyprctl >/dev/null; then

@@ -19,6 +19,8 @@ Das Skript installiert die benötigten Pakete und richtet Tastatur, Bildschirmsc
 
 Das Omarchy-Menü bleibt im englischen Original. Die fehlerhafte eigene Menüübersetzung wurde entfernt; das Sprachsetup verändert Menüdefinitionen nicht mehr.
 
+Bildschirmschoner nach einer Minute Inaktivität; automatische Sperre mit Passwortabfrage nach acht Stunden Inaktivität.
+
 Das Erscheinungsbild verwendet die Omarchy-Standardwerte: Tokyo Night, Standardfonts und Standardtransparenz. Ghostty bleibt Standardterminal und nutzt Omarchys mitgelieferte Konfiguration. Optik separat zurücksetzen: `bash omarchy-setup/setup-appearance.sh`.
 
 Pianoteq wird mit eingerichtet, wenn das selbst heruntergeladene Linux-Archiv `~/Downloads/pianoteq_setup_v925.tar.xz` vorhanden ist (alternativer Pfad: `PIANOTEQ_ARCHIVE`). Separat: `bash omarchy-setup/setup-pianoteq.sh /pfad/zum/archiv.tar.xz`. Das richtet auch Echtzeitrechte, PipeWire-JACK und einen dauerhaften Performance-CPU-Modus ein; Details und Rückstellung stehen im Protokoll. Lizenz und Download verbleiben lokal.

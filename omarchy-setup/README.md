@@ -18,6 +18,12 @@ INTERNAL_KEYBOARD=anderer-geraetename bash setup.sh
 
 ## Konfigurationsprotokoll
 
+### 2026-09-28 – Bildschirmschoner auf eine Minute verkürzt
+
+- Aktueller Sollwert: `idle.screensaver = 60` (1 Minute); automatische Sperre weiterhin `idle.lock = 28800` (8 Stunden), jeweils ab Beginn der Inaktivität.
+- Die lokale `~/.config/omarchy/shell.json` enthielt bereits diese Werte. Mit `omarchy-shell idle status` bestätigt: Dienst aktiviert, `stayAwake: false`, Bildschirmschoner `60`, Sperre `28800` Sekunden. Keine weitere lokale Änderung nötig.
+- `setup.sh` auf 60 Sekunden angepasst; ersetzt den früheren Bildschirmschonerwert von 600 Sekunden in den folgenden historischen Einträgen.
+
 ### 2026-09-28 – Defekte Menüübersetzung zurückgenommen
 
 - Ursache: `setup-language-user.py` erzeugte Overrides mit ausschließlich `label`/`title`. Die installierte `MenuModel.js` normalisiert diese vor dem Zusammenführen mit den Originaleinträgen und setzt fehlende Felder auf leere Werte. Dadurch gingen 98 Aktionen, 2 dynamische Menüquellen und 141 Symbole verloren; Einträge wurden zu leeren Untermenüs.
