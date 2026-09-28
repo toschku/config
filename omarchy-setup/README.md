@@ -46,6 +46,32 @@ INTERNAL_KEYBOARD=anderer-geraetename bash setup.sh
 
 Weitere gewünschte Einstellungen, Programme und Downloads werden hier und im Skript ergänzt.
 
+### 2026-09-28 – Optik auf Omarchy-Standard zurückgesetzt
+
+- Ersetzt die unten dokumentierten persönlichen Theme-, Schrift- und Transparenzanpassungen.
+- Theme Tokyo Night; mitgelieferte Terminal- und Hyprland-Look-and-Feel-Konfigurationen wiederhergestellt.
+- Persönliche Fontconfig-Overrides entfernt, GTK-Schriftwerte auf Schema-Standard zurückgesetzt. Monospace nutzt wieder JetBrainsMono Nerd Font.
+- Ghostty bleibt Standardterminal, verwendet unter Linux jetzt die Omarchy-Standardkonfiguration samt dynamischer Theme-Anbindung.
+- `setup-appearance.sh` stellt diese Standards wieder her; `setup-ghostty.sh` spielt die persönliche `config.ghostty` nicht mehr ein.
+- Vorherige Benutzerkonfigurationen und GTK-Schriftwerte werden mit Zeitstempel gesichert.
+
+### 2026-09-28 – Pianoteq 9.2.5 und Audio
+
+- Grundlage: `README_LINUX.txt` aus dem selbst heruntergeladenen `pianoteq_setup_v925.tar.xz`; vollständig gelesen. Archiv-SHA256: `0ea69ca7a202dcc3a5a7d847688bb19bf6497e156c04f4f579fae82a73e36623`.
+- ARM64-Standalone unter `~/.local/share/pianoteq/Pianoteq 9/arm-64bit/`; Menüeintrag **Pianoteq 9** und Startbefehl `pianoteq`. Deutsche Dokumentation und Linux-README im Installationsordner.
+- VST3/LV2 über Links in `~/.vst3/` und `~/.lv2/` installiert. Archive, Binärdateien, Aktivierungsdaten und persönliche Presets werden nicht im Repository veröffentlicht.
+- `pipewire-jack` ersetzt `jack2`; die JACK-Bibliotheksschnittstelle für andere Anwendungen bleibt vorhanden. Asahi-Audio, WirePlumber und speakersafetyd bleiben aktiv.
+- Pianoteq-Audiosystem: JACK über PipeWire, zunächst **256 Samples bei 48 kHz**, also ein 64er-Vielfaches gemäß README. Das entspricht 5,33 ms pro Puffer, nicht der gesamten gemessenen Ein-/Ausgabelatenz.
+- Startskript setzt `PIPEWIRE_LATENCY=256/48000` und ermittelt per `wpctl` den gewählten Desktop-Ausgang für `PIPEWIRE_NODE`. Damit führt die automatische Verbindung bei internen Lautsprechern über den Asahi-DSP statt direkt auf Roh-ALSA. Bei Wechsel des Ausgabegeräts Pianoteq neu starten.
+- Neue Echtzeitrechte nur für den Desktop-Benutzer: `/etc/security/limits.d/90-pianoteq-<Benutzer>.conf`, `rtprio 90`, `nice -10`, `memlock 500000` KiB. Entsprechend auch `/etc/systemd/system/user@<UID>.service.d/90-pianoteq.conf` für vom Desktop gestartete Anwendungen.
+- **Einmal abmelden und wieder anmelden**, damit die laufende Desktop-Sitzung und der systemd-Benutzermanager diese Limits übernehmen. Frische PAM-Sitzung geprüft: rtprio 90, memlock 500000, Echtzeit-Scheduling-Test erfolgreich.
+- CPU: `cpupower` installiert, `GOVERNOR='performance'` in `/etc/default/cpupower-service.conf`, `cpupower.service` aktiviert. Alle drei CPU-Cluster laufen im Performance-Modus. Diese Einstellung ist systemweit und dauerhaft, auch ohne Pianoteq; sie kann den Akkuverbrauch erhöhen. Thermische Schutzmechanismen bleiben aktiv.
+- Zurück zum vorherigen dynamischen CPU-Modus: `sudo systemctl disable --now cpupower.service` und `sudo cpupower frequency-set -g schedutil`.
+- Die Raspberry-Pi-spezifischen Taktwerte und die dort empfohlene Absenkung der Synthese-Samplerate werden auf diesem Apple-Silicon-Mac nicht übernommen.
+- Geprüft: Desktopdatei, ARM64-Abhängigkeiten, zeitweise sichtbarer JACK-Client in PipeWire mit `256/48000`, CPU-Governor und vorbereitete Echtzeitlimits. Der abschließende Programmstart am 2026-09-28 um 13:12 Uhr endete jedoch mit SIGSEGV; gleichzeitig fehlten der laufenden Sitzung noch die neuen Echtzeitrechte. Ein Zusammenhang ist nicht nachgewiesen. Nach erneuter Anmeldung sind Programmstart, Asahi-Audiorouting und MIDI-Spieltest noch zu prüfen; die Einrichtung ist funktional noch nicht abschließend bestätigt.
+- Erneute Installation: Archiv aus dem eigenen [Modartt-Konto](https://www.modartt.com/) herunterladen, dann `bash omarchy-setup/setup-pianoteq.sh /pfad/pianoteq_setup_v925.tar.xz`. Das Gesamtskript erkennt dieses Archiv im Downloads-Ordner oder über `PIANOTEQ_ARCHIVE`. Kein automatisierter Download mit Zugangsdaten.
+- Technische Referenzen: [PipeWire-JACK-Konfiguration](https://docs.pipewire.org/page_man_pipewire-jack_conf_5.html), [Asahi-Audiostack](https://asahilinux.org/docs/sw/audio-userspace/).
+
 ### 2026-09-28 – Einheitliches Erscheinungsbild, weniger Transparenz
 
 - Systemdesign: Omarchy `Catppuccin` (Mocha, dunkel), passend zu Ghosttys dunkler Variante; zuvor Tokyo Night.

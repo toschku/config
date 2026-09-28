@@ -13,6 +13,11 @@ bash "$setup_dir/setup-language.sh"
 bash "$setup_dir/setup-git.sh"
 bash "$setup_dir/setup-ghostty.sh"
 bash "$setup_dir/setup-appearance.sh"
+if [[ -f "${PIANOTEQ_ARCHIVE:-$HOME/Downloads/pianoteq_setup_v925.tar.xz}" ]]; then
+  bash "$setup_dir/setup-pianoteq.sh"
+else
+  echo 'Pianoteq: Linux-Archiv bei Modartt herunterladen, danach setup-pianoteq.sh ARCHIV ausführen.'
+fi
 
 python3 - <<'PY'
 import datetime

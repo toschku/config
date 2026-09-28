@@ -10,3 +10,5 @@ id_rsa*
 hosts.yml
 logins.json
 key4.db
+*.prefs
+pianoteq_setup_*.tar.xz

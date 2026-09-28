@@ -17,15 +17,17 @@ bash omarchy-setup/setup.sh
 
 Das Skript installiert die benötigten Pakete und richtet Tastatur, Bildschirmschoner/Sperre, deutsche Sprache, Thunderbird für iCloud, Git/SSH und Ghostty ein. Für Systemänderungen wird `sudo` verwendet. Am Ende führt es durch die GitHub-Anmeldung und die Erstellung eines SSH-Schlüssels für den jeweiligen Rechner. Das iCloud-App-Passwort wird direkt in Thunderbird eingegeben.
 
-Das Erscheinungsbild verwendet systemweit Catppuccin Mocha und IBM Plex Mono. Ghostty hat 95 % Hintergrunddeckkraft; zusätzliche Hyprland-Fenstertransparenz ist deaktiviert. Separat anwenden: `bash omarchy-setup/setup-appearance.sh`.
+Das Erscheinungsbild verwendet die Omarchy-Standardwerte: Tokyo Night, Standardfonts und Standardtransparenz. Ghostty bleibt Standardterminal und nutzt Omarchys mitgelieferte Konfiguration. Optik separat zurücksetzen: `bash omarchy-setup/setup-appearance.sh`.
 
-Ghostty separat installieren oder nach Änderungen an `config.ghostty` neu konfigurieren:
+Pianoteq wird mit eingerichtet, wenn das selbst heruntergeladene Linux-Archiv `~/Downloads/pianoteq_setup_v925.tar.xz` vorhanden ist (alternativer Pfad: `PIANOTEQ_ARCHIVE`). Separat: `bash omarchy-setup/setup-pianoteq.sh /pfad/zum/archiv.tar.xz`. Das richtet auch Echtzeitrechte, PipeWire-JACK und einen dauerhaften Performance-CPU-Modus ein; Details und Rückstellung stehen im Protokoll. Lizenz und Download verbleiben lokal.
+
+Ghostty separat mit Omarchy-Standardkonfiguration installieren:
 
 ```bash
 bash omarchy-setup/setup-ghostty.sh
 ```
 
-Unter Linux werden die macOS-spezifischen Optionen weggelassen, die Unschärfe auf `true` gesetzt und Fensterdekorationen ausgeblendet. Schrift, Größe, Farben, Transparenz und Abstände stammen aus `config.ghostty`. Vorhandene Konfigurationen werden vor Änderungen gesichert.
+Unter Linux wird die mitgelieferte Omarchy-Konfiguration für Ghostty verwendet; `config.ghostty` wird dort nicht eingespielt. Vorhandene Konfigurationen werden vor Änderungen gesichert.
 
 ## Mit GitHub synchronisieren
 
