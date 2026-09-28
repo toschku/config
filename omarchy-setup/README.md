@@ -18,6 +18,13 @@ INTERNAL_KEYBOARD=anderer-geraetename bash setup.sh
 
 ## Konfigurationsprotokoll
 
+### 2026-09-28 – Maus-Scrollrichtung umgekehrt
+
+- `input.natural_scroll` von `false` auf `true` gesetzt, in `~/.config/hypr/input.lua`. Verbundene Maus: `logi-pop-mouse`.
+- Die bereits natürliche Scrollrichtung des Trackpads bleibt erhalten.
+- Automatisiert mit `setup-mouse.py`, eingebunden in `setup.sh`; sichert die Eingabekonfiguration vor Änderungen.
+- Hyprland neu geladen, Konfigurationsfehler und aktive Scrollwerte geprüft.
+
 ### 2026-09-28 – Thunderbird öffnete ein leeres Profil
 
 - Ursache: Das eingerichtete iCloud-Profil wurde nur vom Starter „iCloud Mail“ explizit gewählt. Beim normalen Thunderbird-Start entstand ein separates, leeres Standardprofil; das iCloud-Konto war weiterhin in `omarchy-icloud/prefs.js` vorhanden.
