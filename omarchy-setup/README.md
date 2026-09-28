@@ -46,6 +46,16 @@ INTERNAL_KEYBOARD=anderer-geraetename bash setup.sh
 
 Weitere gewünschte Einstellungen, Programme und Downloads werden hier und im Skript ergänzt.
 
+### 2026-09-28 – Einheitliches Erscheinungsbild, weniger Transparenz
+
+- Systemdesign: Omarchy `Catppuccin` (Mocha, dunkel), passend zu Ghosttys dunkler Variante; zuvor Tokyo Night.
+- Schrift: `IBM Plex Mono` über `omarchy font set` für Terminals, Leiste und Monospace-Anwendungen; zusätzlich Fontconfig-Sans-Serif-Zuordnung sowie GTK-Oberflächen-, Dokument- und Titelschrift. Oberfläche 11 pt, Ghostty weiterhin 14 pt.
+- Ghostty-Hintergrunddeckkraft von 0,2 auf 0,95 erhöht (5 % Transparenz), inaktive Splits ebenfalls 0,95 statt 0,5. Quelle `config.ghostty` angepasst.
+- Hyprland: zusätzliche Omarchy-Fenstertransparenz für `default-opacity` auf `1.0 1.0` gesetzt. So bleiben Texte scharf und Ghosttys eigene Transparenz wird nicht nochmals verstärkt.
+- Automatisierung: `setup-appearance.sh` und `setup-appearance.py`, im Gesamtskript eingebunden. Vorherige Benutzerdateien und GTK-Schriftwerte werden gesichert.
+- Omarchys Theme-Unterstützung bestimmt die Reichweite: unterstützte Anwendungen erhalten Catppuccin, GTK-Anwendungen den passenden dunklen Modus. Programme mit eigenen Design-/Schriftvorgaben können davon abweichen.
+- Geprüft: aktives Theme `Catppuccin`, Fontconfig für Monospace und Sans-Serif `IBM Plex Mono`, Ghostty-Deckkraft 0,95, Ghostty-Validierung und Hyprland-Konfiguration ohne Fehler.
+
 ### 2026-09-28 – Ghostty und gemeinsames Konfigurationsrepository
 
 - Repository: https://github.com/toschku/config, bestehender Hauptbranch `haupt`.

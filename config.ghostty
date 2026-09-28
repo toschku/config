@@ -8,10 +8,10 @@ theme = light:Catppuccin Latte,dark:Catppuccin Mocha
 
 mouse-hide-while-typing
 
-background-opacity = 0.2
+background-opacity = 0.95
 background-blur = macos-glass-clear
 
-unfocused-split-opacity = 0.5
+unfocused-split-opacity = 0.95
 
 window-padding-x = 28
 window-padding-y = 28

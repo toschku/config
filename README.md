@@ -17,6 +17,8 @@ bash omarchy-setup/setup.sh
 
 Das Skript installiert die benötigten Pakete und richtet Tastatur, Bildschirmschoner/Sperre, deutsche Sprache, Thunderbird für iCloud, Git/SSH und Ghostty ein. Für Systemänderungen wird `sudo` verwendet. Am Ende führt es durch die GitHub-Anmeldung und die Erstellung eines SSH-Schlüssels für den jeweiligen Rechner. Das iCloud-App-Passwort wird direkt in Thunderbird eingegeben.
 
+Das Erscheinungsbild verwendet systemweit Catppuccin Mocha und IBM Plex Mono. Ghostty hat 95 % Hintergrunddeckkraft; zusätzliche Hyprland-Fenstertransparenz ist deaktiviert. Separat anwenden: `bash omarchy-setup/setup-appearance.sh`.
+
 Ghostty separat installieren oder nach Änderungen an `config.ghostty` neu konfigurieren:
 
 ```bash

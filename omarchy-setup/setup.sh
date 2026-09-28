@@ -12,6 +12,7 @@ python3 "$setup_dir/setup-mail.py"
 bash "$setup_dir/setup-language.sh"
 bash "$setup_dir/setup-git.sh"
 bash "$setup_dir/setup-ghostty.sh"
+bash "$setup_dir/setup-appearance.sh"
 
 python3 - <<'PY'
 import datetime
