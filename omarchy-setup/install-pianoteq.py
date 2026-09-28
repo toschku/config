@@ -55,7 +55,7 @@ for item in list(root):
     if item.get('name') == 'audio-setup':
         root.remove(item)
 value = ET.SubElement(root, 'VALUE', name='audio-setup')
-ET.SubElement(value, 'DEVICESETUP', deviceType='JACK', audioOutputDeviceName='Auto-connect ON',
+ET.SubElement(value, 'DEVICESETUP', deviceType='JACK', audioOutputDeviceName='Auto-connect OFF',
               audioInputDeviceName='', audioDeviceRate='48000', audioDeviceBufferSize='256',
               audioDeviceInChans='0', audioDeviceOutChans='11')
 tree.write(prefs, encoding='UTF-8', xml_declaration=True)
@@ -68,14 +68,11 @@ subprocess.run([str(binary), '--install-app-icon-and-quit'], check=True)
 launcher = home / '.local/bin/pianoteq'
 launcher.parent.mkdir(parents=True, exist_ok=True)
 import shlex
-launcher.write_text('''#!/bin/sh
-export PIPEWIRE_LATENCY="${PIPEWIRE_LATENCY:-256/48000}"
-# Auto-connect to the desktop's selected output, including the Asahi speaker DSP.
-if [ -z "${PIPEWIRE_NODE:-}" ]; then
-  PIPEWIRE_NODE=$(wpctl inspect @DEFAULT_AUDIO_SINK@ | sed -n 's/^id \\([0-9]*\\),.*/\\1/p')
-  if [ -n "$PIPEWIRE_NODE" ]; then export PIPEWIRE_NODE; fi
-fi
-exec pw-jack ''' + shlex.quote(str(binary)) + ' "$@"\n')
+helper = home / '.local/libexec/pianoteq-launch.py'
+helper.parent.mkdir(parents=True, exist_ok=True)
+shutil.copy2(Path(__file__).with_name('pianoteq-launch.py'), helper)
+launcher.write_text('#!/bin/sh\nexec python3 ' + shlex.quote(str(helper)) + ' '
+                   + shlex.quote(str(binary)) + ' "$@"\n')
 launcher.chmod(0o755)
 # Rewrite the vendor-generated launchers to use the low-latency wrapper.
 for desktop in (data / 'applications').glob('*.desktop'):

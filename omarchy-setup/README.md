@@ -55,6 +55,17 @@ INTERNAL_KEYBOARD=anderer-geraetename bash setup.sh
 
 Weitere gewünschte Einstellungen, Programme und Downloads werden hier und im Skript ergänzt.
 
+### 2026-09-28 – Pianoteq nach Neustart geprüft und Startabsturz behoben
+
+- Nach dem Neustart sind Echtzeitrechte aktiv: rtprio 90 und memlock 500000 KiB, sowohl in der Sitzung als auch im laufenden Pianoteq-Prozess. Audiothreads mit Echtzeitprioritäten 83/65 und MIDI-Thread mit 90 beobachtet.
+- Pianoteq stürzte dennoch erneut mit SIGSEGV ab, an denselben Programmoffsets wie zuvor. Kein Hinweis auf Speichermangel. Der lokale Backtrace hat keine Modartt-Funktionssymbole; eine genaue interne Fehlerursache ist damit nicht belegt.
+- Vergleichstest mit temporären Einstellungen: ohne `PIPEWIRE_NODE` startet Pianoteq; mit der zuvor eingerichteten Ausgangsfilterung trat der Absturz auf. Diese eigene Konfiguration wurde entfernt. Der Neustart allein konnte den Fehler nicht beheben.
+- Neuer Startmechanismus: `~/.local/libexec/pianoteq-launch.py`, über `~/.local/bin/pianoteq` und den App-Menüeintrag. Keine Portfilterung. `jack.self-connect-mode = ignore-external` verhindert die falsche automatische Kopfhörerverbindung; ein separater `pw-link`-Aufruf verbindet ausschließlich die beiden Stereoausgänge des gestarteten Prozesses mit dem Desktop-Standardausgang.
+- Der Installer verteilt den Helfer künftig mit. Die Auswahl in Pianoteq steht auf JACK / Auto-connect OFF; zusätzliche JACK-Selbstverbindungen werden ausdrücklich unterbunden.
+- Geprüft: Programmstart und separater erneuter Start mit temporären Einstellungen erfolgreich; beide Stereokanäle ausschließlich über `audio_effect.j316-convolver` mit dem Asahi-Lautsprecher-DSP verbunden. 256 Samples bei 48 kHz, keine PipeWire-Fehler im kurzen Leerlauftest.
+- Nutzer-Hörtest auf der Bildschirmklaviatur erfolgreich: **Ton ohne Knackser**. Physisches MIDI-Keyboard und langfristiger Lasttest sind damit noch nicht geprüft.
+- Laufende Anwendung bleibt geöffnet. Vorheriger Launcher und persönliche Einstellungen wurden vor der Korrektur mit Zeitstempel gesichert; keine Aktivierungsdaten verändert.
+
 ### 2026-09-28 – Optik auf Omarchy-Standard zurückgesetzt
 
 - Ersetzt die unten dokumentierten persönlichen Theme-, Schrift- und Transparenzanpassungen.
@@ -71,13 +82,13 @@ Weitere gewünschte Einstellungen, Programme und Downloads werden hier und im Sk
 - VST3/LV2 über Links in `~/.vst3/` und `~/.lv2/` installiert. Archive, Binärdateien, Aktivierungsdaten und persönliche Presets werden nicht im Repository veröffentlicht.
 - `pipewire-jack` ersetzt `jack2`; die JACK-Bibliotheksschnittstelle für andere Anwendungen bleibt vorhanden. Asahi-Audio, WirePlumber und speakersafetyd bleiben aktiv.
 - Pianoteq-Audiosystem: JACK über PipeWire, zunächst **256 Samples bei 48 kHz**, also ein 64er-Vielfaches gemäß README. Das entspricht 5,33 ms pro Puffer, nicht der gesamten gemessenen Ein-/Ausgabelatenz.
-- Startskript setzt `PIPEWIRE_LATENCY=256/48000` und ermittelt per `wpctl` den gewählten Desktop-Ausgang für `PIPEWIRE_NODE`. Damit führt die automatische Verbindung bei internen Lautsprechern über den Asahi-DSP statt direkt auf Roh-ALSA. Bei Wechsel des Ausgabegeräts Pianoteq neu starten.
+- Startskript setzt `PIPEWIRE_LATENCY=256/48000` und verbindet nach dem Start per `pw-link` mit dem gewählten Desktop-Ausgang. Die ursprünglich verwendete Variable `PIPEWIRE_NODE` wurde wegen des reproduzierten Startabsturzes entfernt (siehe Nachprüfung oben). Bei Wechsel des Ausgabegeräts Pianoteq neu starten.
 - Neue Echtzeitrechte nur für den Desktop-Benutzer: `/etc/security/limits.d/90-pianoteq-<Benutzer>.conf`, `rtprio 90`, `nice -10`, `memlock 500000` KiB. Entsprechend auch `/etc/systemd/system/user@<UID>.service.d/90-pianoteq.conf` für vom Desktop gestartete Anwendungen.
 - **Einmal abmelden und wieder anmelden**, damit die laufende Desktop-Sitzung und der systemd-Benutzermanager diese Limits übernehmen. Frische PAM-Sitzung geprüft: rtprio 90, memlock 500000, Echtzeit-Scheduling-Test erfolgreich.
 - CPU: `cpupower` installiert, `GOVERNOR='performance'` in `/etc/default/cpupower-service.conf`, `cpupower.service` aktiviert. Alle drei CPU-Cluster laufen im Performance-Modus. Diese Einstellung ist systemweit und dauerhaft, auch ohne Pianoteq; sie kann den Akkuverbrauch erhöhen. Thermische Schutzmechanismen bleiben aktiv.
 - Zurück zum vorherigen dynamischen CPU-Modus: `sudo systemctl disable --now cpupower.service` und `sudo cpupower frequency-set -g schedutil`.
 - Die Raspberry-Pi-spezifischen Taktwerte und die dort empfohlene Absenkung der Synthese-Samplerate werden auf diesem Apple-Silicon-Mac nicht übernommen.
-- Geprüft: Desktopdatei, ARM64-Abhängigkeiten, zeitweise sichtbarer JACK-Client in PipeWire mit `256/48000`, CPU-Governor und vorbereitete Echtzeitlimits. Der abschließende Programmstart am 2026-09-28 um 13:12 Uhr endete jedoch mit SIGSEGV; gleichzeitig fehlten der laufenden Sitzung noch die neuen Echtzeitrechte. Ein Zusammenhang ist nicht nachgewiesen. Nach erneuter Anmeldung sind Programmstart, Asahi-Audiorouting und MIDI-Spieltest noch zu prüfen; die Einrichtung ist funktional noch nicht abschließend bestätigt.
+- Erster Prüfstand: Desktopdatei, ARM64-Abhängigkeiten und JACK-Client geprüft; der Start um 13:12 Uhr scheiterte noch mit SIGSEGV. **Inzwischen behoben und nach dem Neustart einschließlich Nutzer-Hörtest erfolgreich geprüft**, siehe Nachprüfung oben.
 - Erneute Installation: Archiv aus dem eigenen [Modartt-Konto](https://www.modartt.com/) herunterladen, dann `bash omarchy-setup/setup-pianoteq.sh /pfad/pianoteq_setup_v925.tar.xz`. Das Gesamtskript erkennt dieses Archiv im Downloads-Ordner oder über `PIANOTEQ_ARCHIVE`. Kein automatisierter Download mit Zugangsdaten.
 - Technische Referenzen: [PipeWire-JACK-Konfiguration](https://docs.pipewire.org/page_man_pipewire-jack_conf_5.html), [Asahi-Audiostack](https://asahilinux.org/docs/sw/audio-userspace/).
 
