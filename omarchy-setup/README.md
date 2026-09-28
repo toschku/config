@@ -18,6 +18,12 @@ INTERNAL_KEYBOARD=anderer-geraetename bash setup.sh
 
 ## Konfigurationsprotokoll
 
+### 2026-09-28 – Externe Tastatur US-Mac, interne Deutsch-Mac
+
+- Externes Apple Magic Keyboard mit Touch ID (`apple-inc.-magic-keyboard-with-touch-id`): eigener Geräteblock mit `kb_layout = "us"`, `kb_variant = "mac"` in `~/.config/hypr/input.lua`.
+- Interne Tastatur (`apple-spi-keyboard`) bleibt bei `de`/`mac`. Beide Layouts nach Hyprland-Reload geprüft; keine Konfigurationsfehler.
+- `setup-external-keyboard.py` ist in `setup.sh` eingebunden und sichert die Datei vor Änderungen. Anderes externes Gerät bei einer späteren Installation mit `EXTERNAL_KEYBOARD=geraetename bash setup.sh` angeben.
+
 ### 2026-09-28 – Maus-Scrollrichtung umgekehrt
 
 - `input.natural_scroll` von `false` auf `true` gesetzt, in `~/.config/hypr/input.lua`. Verbundene Maus: `logi-pop-mouse`.
