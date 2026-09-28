@@ -18,6 +18,15 @@ INTERNAL_KEYBOARD=anderer-geraetename bash setup.sh
 
 ## Konfigurationsprotokoll
 
+### 2026-09-28 – Defekte Menüübersetzung zurückgenommen
+
+- Ursache: `setup-language-user.py` erzeugte Overrides mit ausschließlich `label`/`title`. Die installierte `MenuModel.js` normalisiert diese vor dem Zusammenführen mit den Originaleinträgen und setzt fehlende Felder auf leere Werte. Dadurch gingen 98 Aktionen, 2 dynamische Menüquellen und 141 Symbole verloren; Einträge wurden zu leeren Untermenüs.
+- Reparatur: `~/.config/omarchy/extensions/omarchy-menu.jsonc` aus `omarchy-menu.jsonc.bak.20260928T103525925961Z` wiederhergestellt. Die defekte Übersetzung liegt lokal in `omarchy-menu.jsonc.broken-translation.20260928T112729Z` im selben Verzeichnis.
+- Geprüft mit dem tatsächlich installierten Menümodell: Die Sicherung ergibt exakt das unveränderte Standardmenü. `omarchy menu refresh`, `omarchy menu ping` und das Öffnen des Hauptmenüs meldeten anschließend `ok`.
+- Dauerhafte Änderung: Übersetzungsgenerator und `menu-de.json` entfernt. Auch erneutes Ausführen des Setups lässt die Menüdatei unverändert; Systemsprache, Anwendungssprachen und deutsches Uhrformat bleiben bestehen.
+- Auf anderen bereits eingerichteten Rechnern repariert das Sprachskript alte Menü-Overrides nicht automatisch. Dort die passende Sicherung von vor der Übersetzung zurückspielen und `omarchy menu refresh` ausführen; eigene Menüanpassungen vorher sichern.
+- Keine Neuinstallation erforderlich. Keine Änderung an paketverwalteten Omarchy-Dateien.
+
 ### 2026-09-28 – Interne Tastatur: Deutsch (Mac)
 
 - Hardware: Apple SPI Keyboard, Hyprland-Name `apple-spi-keyboard`.
@@ -136,7 +145,7 @@ git pull
 - Desktop-Umgebung: gleiche Vorgaben in `~/.config/environment.d/60-personal-language.conf`, `~/.config/uwsm/env` und als `hl.env`-Einträge in `~/.config/hypr/hyprland.lua`.
 - Chromium: `--lang=de` in `~/.config/chromium-flags.conf`; wird nach vollständigem Beenden und erneutem Öffnen aktiv, auch für Chromium-Webapp-Fenster. Die Sprache der Webseiten selbst hängt vom jeweiligen Dienst ab.
 - Sprachpakete/Wörterbücher installiert: `libreoffice-fresh-de`, `hunspell-de`, `hyphen-de`, `mythes-de`, `tesseract-data-deu`. Thunderbird war bereits Deutsch; GTK-/KDE-Anwendungen wie Dateien, Evince, Xournal++ und Kdenlive enthalten deutsche Übersetzungen und verwenden die Systemsprache.
-- Omarchy-Menü: deutsche Beschriftungen als Benutzer-Overrides in `~/.config/omarchy/extensions/omarchy-menu.jsonc`. Die Zuordnung steht in `menu-de.json`; Aktionen und Bedingungen kommen weiterhin aus Omarchys Originaldefinitionen.
+- Omarchy-Menü: bleibt im englischen Original. Die ursprünglich eingerichteten deutschen Benutzer-Overrides wurden wegen des unten dokumentierten Fehlers zurückgenommen; das Sprachskript verändert die Menüdefinitionen nicht mehr.
 - Uhr: deutsche Wochentage/Monate durch die Sitzungssprache; alternatives Datumsformat `d. MMMM yyyy 'KW' ww`.
 - Sicherungen: geänderte bestehende Dateien werden vor dem Schreiben als `*.bak.<UTC-Zeitstempel>` gesichert.
 - Automatisierung: `setup.sh` ruft `setup-language.sh` auf. Dieses führt die System- und Benutzerkonfiguration aus und installiert Sprachpakete für vorhandene Anwendungen. Gesamten Setup-Ordner aufbewahren; als normaler Benutzer ausführen, Root-Rechte werden über `sudo` angefordert.

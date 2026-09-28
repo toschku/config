@@ -7,7 +7,6 @@ import re
 import shutil
 
 root = Path(os.environ.get('XDG_CONFIG_HOME', str(Path.home() / '.config')))
-here = Path(__file__).resolve().parent
 
 def write(path, text):
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -43,24 +42,8 @@ old = flags.read_text() if flags.exists() else ''
 lines = [l for l in old.splitlines() if not l.startswith('--lang=')]
 write(flags, '\n'.join(lines + ['--lang=de']) + '\n')
 
-# Read JSONC while preserving quoted strings, including // inside URLs.
-def jsonc(text):
-    text = re.sub(r'"(?:\\.|[^"\\])*"|//[^\n]*|/\*[\s\S]*?\*/',
-                  lambda m: m[0] if m[0].startswith('"') else '', text)
-    text = re.sub(r'("(?:\\.|[^"\\])*"|,)\s*(?=[}\]])',
-                  lambda m: m[0] if m[1].startswith('"') else '', text)
-    return json.loads(text)
-
-default = Path(os.environ.get('OMARCHY_PATH', '/usr/share/omarchy')) / 'default/omarchy/omarchy-menu.jsonc'
-if default.exists():
-    translations = json.loads((here / 'menu-de.json').read_text())
-    target = root / 'omarchy/extensions/omarchy-menu.jsonc'
-    config = jsonc(target.read_text()) if target.exists() else {}
-    for key, item in jsonc(default.read_text()).items():
-        for field in ('label', 'title'):
-            if item.get(field) in translations:
-                config.setdefault(key, {})[field] = translations[item[field]]
-    write(target, json.dumps(config, ensure_ascii=False, indent=2) + '\n')
+# Keep Omarchy menu definitions untouched: label-only overrides also clear
+# actions, providers and icons in the installed MenuModel.js implementation.
 
 target = root / 'omarchy/shell.json'
 if target.exists():
