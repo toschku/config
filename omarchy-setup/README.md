@@ -178,3 +178,12 @@ git pull
 - Bei abgelehntem IMAP-Benutzernamen laut Apple alternativ die vollständige Mailadresse in den Kontoeinstellungen verwenden.
 - Quellen: [Apple-Servereinstellungen](https://support.apple.com/de-de/102525), [App-spezifische Passwörter](https://support.apple.com/de-de/102654).
 - Die Anmeldung sowie Empfang und Versand können erst nach Eingabe des Passworts geprüft werden.
+
+### 2026-09-28 – Codex ohne einzelne Befehlsfreigaben
+
+- Auf ausdrücklichen Wunsch: `approval_policy = "never"` und `sandbox_mode = "danger-full-access"` in `~/.codex/config.toml`. Damit darf Codex mit den Rechten des angemeldeten Benutzers ohne Sandbox und ohne Befehlsfreigaben arbeiten. Betriebssystemrechte und sudo bleiben separat.
+- `setup.sh` ruft `setup-codex.py` auf; bestehende Einstellungen bleiben erhalten und werden vor einer Änderung gesichert. Keine Zugangsdaten im Repository.
+- Die untersuchte Sitzung wurde mit `codex resume` gestartet; bisher waren keine dauerhaften Berechtigungsdefaults gesetzt. Ghostty setzt diese Berechtigungen nicht.
+- Für die aktuelle Sitzung Codex beenden und mit `codex --dangerously-bypass-approvals-and-sandbox resume --last` fortsetzen. Für neue direkte Starts reicht anschließend `codex`.
+- Omarchys Agent-Starter übergibt derzeit `--approve-for-me` und kann dadurch die Defaults überschreiben. Für Vollzugriff Codex direkt im Terminal starten; keine paketverwalteten Starter verändert.
+- Einstellungen nach der [offiziellen OpenAI-Konfigurationsreferenz](https://learn.chatgpt.com/docs/config-file/config-reference).

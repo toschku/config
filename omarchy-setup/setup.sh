@@ -11,6 +11,7 @@ pacman -Q thunderbird thunderbird-i18n-de >/dev/null
 python3 "$setup_dir/setup-mail.py"
 bash "$setup_dir/setup-language.sh"
 bash "$setup_dir/setup-git.sh"
+python3 "$setup_dir/setup-codex.py"
 bash "$setup_dir/setup-ghostty.sh"
 bash "$setup_dir/setup-appearance.sh"
 if [[ -f "${PIANOTEQ_ARCHIVE:-$HOME/Downloads/pianoteq_setup_v925.tar.xz}" ]]; then
